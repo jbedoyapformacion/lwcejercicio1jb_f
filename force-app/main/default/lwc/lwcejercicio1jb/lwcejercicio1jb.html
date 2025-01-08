@@ -1,0 +1,25 @@
+<template>
+    <lightning-card title="Lista de Libros generados desde un lwc" icon-name="standard:book">
+        <div class="slds-p-around_medium">
+            <!-- Condicional para mostrar la lista de libros si existen -->
+            <template if:true={libros}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={libros}
+                    columns={columns}
+                    onsave={handleSave}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+            </template>
+
+            <!-- Mensaje de carga o error -->
+            <template if:true={error}>
+                <p class="slds-text-color_error">{error}</p>
+            </template>
+
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>
