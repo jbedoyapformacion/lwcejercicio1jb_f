@@ -31,44 +31,5 @@ export default class LibrosList extends LightningElement {
             this.libros = [];
         }
     }
-
-    // Manejar la acción de guardar los cambios en la tabla
-    handleSave(event) {
-        const draftValues = event.detail.draftValues;
-        const updatedRecords = draftValues.map(draft => {
-            return {
-                Id: draft.Id,
-                Numero_de_copias__c: draft.Numero_de_copias__c
-            };
-        });
-
-        this.isLoading = true;
-
-        // Llamada al método Apex para actualizar los registros
-        updateRecord({ updatedRecord: updatedRecords })
-            .then(() => {
-                // Mostrar mensaje de éxito
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Éxito',
-                        message: 'Libros actualizados correctamente',
-                        variant: 'success',
-                    })
-                );
-                this.isLoading = false;
-                // Refrescar la lista de libros
-                return refreshApex(this.libros);
-            })
-            .catch(error => {
-                // Manejar el error
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: 'Hubo un problema al actualizar los libros: ' + error.body.message,
-                        variant: 'error',
-                    })
-                );
-                this.isLoading = false;
-            });
-    }
 }
+console.log(8)

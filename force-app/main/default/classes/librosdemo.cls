@@ -4,8 +4,8 @@ public with sharing class librosdemo {
         try {
             
             return [
-                SELECT Id,  Name, Sinopsis__c, Autor__c, Fecha_de_publicacion__c, Genero__c, Numero_de_copias__c, Reordenar__c
-                FROM    estantelibro__c
+                SELECT Id, Name, Sinopsis__c, Autor__c, Fecha_de_publicacion__c, Genero__c, Numero_de_copias__c, Reordenar__c
+                FROM estantelibro__c
                 LIMIT 100 
             ];
         } catch (Exception e) {
@@ -15,36 +15,58 @@ public with sharing class librosdemo {
         }
     }
 
-    @AuraEnabled 
-    public static void updateRecord(Map<String, Object> updatedRecord) { 
-        try {
-            // Validación de la entrada: Verifica que la entrada tenga un 'Id' y 'Numero_de_copias__c'
-            if (updatedRecord == null || !updatedRecord.containsKey('Id') || !updatedRecord.containsKey('Numero_de_copias__c')) {
-                throw new IllegalArgumentException('Faltan parámetros requeridos');
+    @AuraEnabled
+public static void updateRecords(List<Map<String, Object>> updatedRecords) {
+    try {
+        // Validar que la lista no sea nula ni esté vacía
+        if (updatedRecords == null || updatedRecords.isEmpty()) {
+            throw new IllegalArgumentException('La lista de registros a actualizar no puede ser nula o vacía');
+        }
+
+        // Crear una lista para los registros que se van a actualizar
+        List<estantelibro__c> recordsToUpdate = new List<estantelibro__c>();
+
+        // Recorrer cada registro en la lista
+        for (Map<String, Object> record : updatedRecords) {
+            // Validar que el mapa no sea nulo y contenga las claves requeridas
+            if (record == null || !record.containsKey('Id') ) {
+                throw new IllegalArgumentException('Cada registro debe tener "Id"');
             }
-            
-            // Obtener el ID del registro
-            String recordId = (String)updatedRecord.get('Id');
-            Integer numeroDeCopias = (Integer)updatedRecord.get('Numero_de_copias__c');
-            
-            // Validar que los datos sean correctos antes de hacer la actualización
-            if (String.isBlank(recordId) || numeroDeCopias == null) {
-                throw new IllegalArgumentException('ID del libro o número de copias inválidos');
+
+            // Obtener el ID y el número de copias del registro
+            String recordId = (String) record.get('Id');
+            Integer numeroDeCopias = (Integer) record.get('Numero_de_copias__c');
+
+            // Validar que los valores no sean nulos ni vacíos
+            if (String.isBlank(recordId) ) {
+                throw new IllegalArgumentException('ID del libro no debeser vacío');
             }
 
             // Recuperar el registro de la base de datos
-            estantelibro__c recordToUpdate = [SELECT Id, Numero_de_copias__c FROM estantelibro__c WHERE Id = :recordId LIMIT 1];
+            estantelibro__c existingRecord = [
+                SELECT Numero_de_copias__c
+                FROM estantelibro__c
+                WHERE Id = :recordId
+                LIMIT 1
+            ];
 
             // Modificar el campo del número de copias
-            recordToUpdate.Numero_de_copias__c = numeroDeCopias;
+            existingRecord.Numero_de_copias__c = numeroDeCopias;
 
-            // Actualizar el registro
-            Database.update(recordToUpdate, false); // `false` para permitir actualizaciones parciales en caso de errores
-
-        } catch (Exception e) {
-            // Manejo de errores
-            System.debug('Error al actualizar el libro: ' + e.getMessage());
-            throw new AuraHandledException('Hubo un error al actualizar el libro: ' + e.getMessage());
+            // Agregar a la lista de actualizaciones
+            recordsToUpdate.add(existingRecord);
         }
+
+        // Actualizar todos los registros en una sola operación
+        if (!recordsToUpdate.isEmpty()) {
+            Database.update(recordsToUpdate, false); // `false` para permitir actualizaciones parciales
+        }
+    } catch (Exception e) {
+        // Manejo de errores
+        System.debug('Error al actualizar los libros: ' + e.getMessage());
+        throw new AuraHandledException('Hubo un error al actualizar los libros: ' + e.getMessage());
     }
+}
+
+    
 }
