@@ -1,8 +1,8 @@
 import { LightningElement, wire, track } from 'lwc';
 import getLibros from '@salesforce/apex/librosdemo.getLibros';
-import updateRecord from '@salesforce/apex/librosdemo.updateRecord';
+/*import updateRecord from '@salesforce/apex/librosdemo.updateRecord';
 import { refreshApex } from '@salesforce/apex';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';*/
 
 export default class LibrosList extends LightningElement {
     @track libros = [];
@@ -26,10 +26,10 @@ export default class LibrosList extends LightningElement {
         if (data) {
             this.libros = data;
             this.error = undefined;
+           console.log(data);
         } else if (error) {
             this.error = 'Error al cargar los libros: ' + error.body.message;
             this.libros = [];
         }
     }
 }
-console.log(8)
