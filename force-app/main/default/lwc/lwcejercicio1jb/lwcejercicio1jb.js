@@ -24,18 +24,7 @@ export default class LibrosList extends LightningElement {
    libros;
 
 
-    // === AQUÍ VIENE handleCellChange ===
-    /**
-     * Maneja los cambios realizados en las celdas editables del lightning-datatable.
-     * @param {Object} event - Evento disparado al editar celdas en la tabla.
-     */
-   
-    /**
-     * Método para guardar los cambios editados en las celdas.
-     */
     handleSave(event) {
-        console.log('Draft Values:', JSON.stringify(this.draftValues)); // Verificar valores en consola
-    
         const librosjeff =  event.detail.draftValues;  
         updateRecords({ libros: librosjeff })   // Para actualizar cambios, enviar los datos })
 
