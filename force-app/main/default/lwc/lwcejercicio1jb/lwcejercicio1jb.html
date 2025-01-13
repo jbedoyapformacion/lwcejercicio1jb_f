@@ -6,9 +6,26 @@
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <lightning-card title="Lista de Libros" icon-name="custom:custom63">
-        <lightning-datatable key-field="Id" data={libros.data} columns={columns} draft-values={draftValues}
-            onsave={handleSave}></lightning-datatable>
-
+    <lightning-card title="Listado de Libros" icon-name="custom:custom63">
+        <lightning-datatable 
+        key-field="Id" 
+        data={libros.data} 
+        columns={columns}
+        onrowaction ={handleRowAction}
+        draft-values={draftValues}
+        onsave={handleSave} 
+        >
+    </lightning-datatable>
+            <div class="slds-m-top_small slds-m-bottom_medium">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">
+                       </h2>
+            
+                    <!-- Destructive variant: Identifies a potentially negative action 
+                    <lightning-button variant="destructive" label="Eliminar registro" title="Eliminar" icon-name="utility:delete" class="slds-m-left_x-small"></lightning-button>
+                    -->
+            </div>
+            
+                      
+            
     </lightning-card>
 </template>
