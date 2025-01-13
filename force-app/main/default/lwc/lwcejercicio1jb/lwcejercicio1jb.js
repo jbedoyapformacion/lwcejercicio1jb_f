@@ -1,15 +1,14 @@
 import { LightningElement, wire, track } from 'lwc';
 import getLibros from '@salesforce/apex/librosdemo.getLibros';
-/*import updateRecord from '@salesforce/apex/librosdemo.updateRecord';
+import updateRecords from '@salesforce/apex/librosdemo.updateRecords';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';*/
 
 export default class LibrosList extends LightningElement {
-    @track libros = [];
-    @track error;
-    @track isLoading = false;
+    @track libros = [];        // Almacena los datos obtenidos desde Apex
+    @track draftValues = [];   // Almacena los valores editados
+    @track error;              // Almacena errores
 
-   
     columns = [
         { label: 'Nombre de estantelibro', fieldName: 'Name' },
         { label: 'Autor', fieldName: 'Autor__c' },
@@ -20,16 +19,46 @@ export default class LibrosList extends LightningElement {
         { label: 'Reordenar', fieldName: 'Reordenar__c', type: 'boolean', editable: false }
     ];
 
-    // Cargar los libros desde el método Apex
-    @wire(getLibros)
-    wiredLibros({ error, data }) {
-        if (data) {
-            this.libros = data;
-            this.error = undefined;
-           console.log(data);
-        } else if (error) {
-            this.error = 'Error al cargar los libros: ' + error.body.message;
-            this.libros = [];
-        }
+   
+   @wire(getLibros)// aqui tenemos que el decorador retorna un getter , con la misma nomenclatura que para @wire
+   libros;
+
+
+    // === AQUÍ VIENE handleCellChange ===
+    /**
+     * Maneja los cambios realizados en las celdas editables del lightning-datatable.
+     * @param {Object} event - Evento disparado al editar celdas en la tabla.
+     */
+   
+    /**
+     * Método para guardar los cambios editados en las celdas.
+     */
+    handleSave(event) {
+        console.log('Draft Values:', JSON.stringify(this.draftValues)); // Verificar valores en consola
+    
+        const librosjeff =  event.detail.draftValues;  
+        updateRecords({ libros: librosjeff })   // Para actualizar cambios, enviar los datos })
+
+            .then(() => {
+                this.showToast('Éxito', 'Los registros fueron actualizados correctamente.', 'success');
+                this.draftValues = []; // Limpiar los valores después de guardar
+                return refreshApex(this.libros);
+            })
+            .catch((error) => {
+                this.showToast('Error', 'Hubo un problema al actualizar los registros: ' + error.body.message, 'error');
+            });
+    }
+    
+
+    /**
+     * Método para mostrar mensajes de éxito, advertencia o error.
+     */
+    showToast(title, message, variant) {
+        const event = new ShowToastEvent({
+            title,
+            message,
+            variant,
+        });
+        this.dispatchEvent(event);
     }
 }

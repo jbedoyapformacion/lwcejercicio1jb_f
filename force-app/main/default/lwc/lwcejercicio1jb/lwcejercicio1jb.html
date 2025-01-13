@@ -1,25 +1,14 @@
+<!--
+  @description       : 
+  @author            : JeffreyBedoya @consultor | @NetW
+  @group             : 
+  @last modified on  : 01-13-2025
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <template>
-    <lightning-card title="Lista de Libros generados desde un lwc" icon-name="standard:book">
-        <div class="slds-p-around_medium">
-            <!-- Condicional para mostrar la lista de libros si existen -->
-            <template if:true={libros}>
-                <lightning-datatable
-                    key-field="Id"
-                    data={libros}
-                    columns={columns}
-                    onsave={handleSave}
-                    hide-checkbox-column="true">
-                </lightning-datatable>
-            </template>
+    <lightning-card title="Lista de Libros" icon-name="custom:custom63">
+        <lightning-datatable key-field="Id" data={libros.data} columns={columns} draft-values={draftValues}
+            onsave={handleSave}></lightning-datatable>
 
-            <!-- Mensaje de carga o error -->
-            <template if:true={error}>
-                <p class="slds-text-color_error">{error}</p>
-            </template>
-
-            <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
-            </template>
-        </div>
     </lightning-card>
 </template>
