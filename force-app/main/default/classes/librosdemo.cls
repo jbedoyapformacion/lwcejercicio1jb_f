@@ -2,7 +2,7 @@
  * @description       : clase ejercicio1 libreria de shg que incluye todos los metodos necesarios para la operacion de un solo libro
  * @author            : Jeffrey Bedoya
  * @group             : Netw
- * @last modified on  : 01-13-2025
+ * @last modified on  : 01-21-2025
  * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 //import { deleteRecord } from 'lightning/uiRecordApi';
@@ -34,7 +34,7 @@ public with sharing class librosdemo {
             }
         } catch (Exception e) {
             // Manejo de errores
-            System.debug('Error al actualizar los libros: ' + e.getMessage());
+            System.debug('Error al actualizar l os libros: ' + e.getMessage());
             throw new AuraHandledException('Hubo un error al actualizar los libros: ' + e.getMessage());
         }
     }

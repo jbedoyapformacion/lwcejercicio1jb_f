@@ -93,12 +93,7 @@ export default class LibrosList extends LightningElement {
             .catch((error) => {
                 this.showToast('Error', 'Hubo un problema al eliminar los registros: ' + error.body.message, 'error');
             });
-        /*  const index = this.findRowIndexById(id);
-        if (index !== -1) {
-            this.data = this.data
-                .slice(0, index)
-                .concat(this.data.slice(index + 1));
-        }*/
+       
     }
     findRowIndexById(id) {
         let ret = -1;
